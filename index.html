@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aïcha & Malick — Notre mariage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500;1,9..144,600&family=Work+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --ivoire:#FBF6EF;
+    --ivoire-warm:#F1E6D5;
+    --cafe-fonce:#2A1810;
+    --cafe:#5A3826;
+    --orange:#C1611D;
+    --orange-vif:#E07A2E;
+    --rouge:#8A1F2B;
+    --rouge-vif:#A82834;
+    --font-display:'Fraunces', serif;
+    --font-body:'Work Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+  body{
+    background:var(--ivoire);
+    color:var(--cafe-fonce);
+    font-family:var(--font-body);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  img,svg{display:block; max-width:100%;}
+  button{font-family:inherit; cursor:pointer;}
+  :focus-visible{outline:2px solid var(--orange-vif); outline-offset:3px;}
+
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--orange);
+  }
+  .eyebrow.on-dark{color:var(--orange-vif);}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    padding:18px 0;
+    transition:background 0.35s ease, box-shadow 0.35s ease, padding 0.35s ease;
+  }
+  header.solid{
+    background:rgba(251,246,239,0.92);
+    backdrop-filter:blur(8px);
+    box-shadow:0 1px 0 rgba(42,24,16,0.08);
+    padding:12px 0;
+  }
+  nav{display:flex; align-items:center; justify-content:space-between;}
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--font-display); font-weight:600; font-style:italic;
+    font-size:19px; color:var(--ivoire);
+    transition:color 0.35s ease;
+  }
+  header.solid .brand{color:var(--cafe-fonce);}
+  .brand .seal{
+    width:30px; height:30px; border-radius:50%;
+    background:var(--rouge);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--ivoire); font-size:11px; font-family:var(--font-mono); letter-spacing:0.05em;
+    flex-shrink:0;
+  }
+  .navlinks{display:flex; gap:30px; font-size:14px;}
+  .navlinks a{
+    color:var(--ivoire); opacity:0.88;
+    padding-bottom:3px; border-bottom:1px solid transparent;
+    transition:color 0.35s ease, border-color 0.2s ease, opacity 0.2s ease;
+  }
+  header.solid .navlinks a{color:var(--cafe-fonce);}
+  .navlinks a:hover{opacity:1; border-color:var(--orange);}
+  @media (max-width:720px){ .navlinks{display:none;} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    background:
+      radial-gradient(ellipse at 20% 15%, rgba(224,122,46,0.35), transparent 55%),
+      radial-gradient(ellipse at 85% 85%, rgba(138,31,43,0.4), transparent 55%),
+      linear-gradient(160deg, var(--cafe-fonce), #3a2013 65%, var(--cafe-fonce));
+    color:var(--ivoire);
+    overflow:hidden;
+    padding:100px 24px 60px;
+  }
+  .hero-pattern{position:absolute; inset:0; opacity:0.16; pointer-events:none;}
+  .hero-inner{position:relative; z-index:2; max-width:720px;}
+  .hero .eyebrow{margin-bottom:22px;}
+  .hero h1{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(48px, 10vw, 100px);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 .amp{
+    display:inline-block;
+    color:var(--orange-vif);
+    font-size:0.7em;
+    margin:0 0.08em;
+    transform:translateY(0.05em);
+  }
+  .hero .date-line{
+    margin-top:26px;
+    font-family:var(--font-mono);
+    font-size:15px;
+    letter-spacing:0.22em;
+    color:var(--ivoire-warm);
+    opacity:0.85;
+  }
+  .hero .tagline{
+    margin-top:34px;
+    font-size:14.5px;
+    color:rgba(241,230,213,0.65);
+    max-width:420px;
+    margin-left:auto; margin-right:auto;
+  }
+  .scroll-cue{
+    position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+    width:1px; height:52px; background:linear-gradient(var(--orange-vif), transparent);
+    animation:pulse-cue 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse-cue{
+    0%,100%{opacity:0.35;} 50%{opacity:1;}
+  }
+
+  /* ---------- SECTION GENERIC ---------- */
+  section{padding:110px 0;}
+  .section-head{max-width:560px; margin-bottom:64px;}
+  .section-head h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(32px,4.5vw,46px);
+    margin-top:14px;
+    color:var(--cafe-fonce);
+  }
+  .section-head p{margin-top:16px; color:var(--cafe); font-size:15.5px; max-width:480px;}
+
+  /* ---------- HISTOIRE / TIMELINE ---------- */
+  .timeline{display:grid; grid-template-columns:repeat(3,1fr); gap:36px;}
+  @media (max-width:820px){ .timeline{grid-template-columns:1fr;} }
+  .tl-item{
+    position:relative;
+    padding-top:26px;
+    border-top:1px solid rgba(90,56,38,0.25);
+  }
+  .tl-num{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--rouge);
+    letter-spacing:0.08em;
+  }
+  .tl-item h3{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-weight:500;
+    font-size:24px;
+    margin:12px 0 10px;
+    color:var(--cafe-fonce);
+  }
+  .tl-item p{font-size:14.5px; color:var(--cafe);}
+
+  /* ---------- PROGRAMME ---------- */
+  .programme{background:var(--cafe-fonce); color:var(--ivoire);}
+  .programme .section-head h2{color:var(--ivoire);}
+  .programme .section-head p{color:rgba(241,230,213,0.7);}
+  .ticket{
+    border:1px solid rgba(241,230,213,0.18);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .ticket-row{
+    display:grid;
+    grid-template-columns:110px 1fr 200px;
+    gap:18px;
+    align-items:center;
+    padding:22px 26px;
+    border-bottom:1px dashed rgba(241,230,213,0.18);
+  }
+  .ticket-row:last-child{border-bottom:none;}
+  .ticket-row:nth-child(odd){background:rgba(241,230,213,0.03);}
+  .ticket-time{font-family:var(--font-mono); color:var(--orange-vif); font-size:14px;}
+  .ticket-label{font-family:var(--font-display); font-style:italic; font-size:19px;}
+  .ticket-place{font-size:12.5px; color:rgba(241,230,213,0.55); text-align:right; font-family:var(--font-mono); letter-spacing:0.04em;}
+  @media (max-width:640px){
+    .ticket-row{grid-template-columns:1fr; gap:4px; text-align:left;}
+    .ticket-place{text-align:left;}
+  }
+
+  /* ---------- LIEU ---------- */
+  .lieu-grid{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;}
+  @media (max-width:820px){ .lieu-grid{grid-template-columns:1fr;} }
+  .map-plate{
+    aspect-ratio:4/3;
+    border-radius:6px;
+    background:
+      repeating-linear-gradient(135deg, rgba(193,97,29,0.08) 0 2px, transparent 2px 22px),
+      var(--ivoire-warm);
+    border:1px solid rgba(90,56,38,0.2);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .map-plate .pin{
+    width:16px; height:16px; border-radius:50% 50% 50% 0;
+    background:var(--rouge); transform:rotate(-45deg);
+    box-shadow:0 0 0 6px rgba(138,31,43,0.12);
+  }
+  .lieu-details h3{font-family:var(--font-display); font-style:italic; font-weight:500; font-size:28px; margin-bottom:10px;}
+  .lieu-details address{font-style:normal; color:var(--cafe); font-size:15px; margin-bottom:20px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 24px;
+    background:var(--rouge);
+    color:var(--ivoire);
+    font-size:14px; font-weight:500;
+    border:none; border-radius:2px;
+    letter-spacing:0.02em;
+    transition:background 0.2s ease, transform 0.15s ease;
+  }
+  .btn:hover{background:var(--rouge-vif); transform:translateY(-1px);}
+  .btn.secondary{background:transparent; color:var(--cafe-fonce); border:1px solid rgba(90,56,38,0.35);}
+  .btn.secondary:hover{background:rgba(90,56,38,0.06);}
+
+  /* ---------- GALERIE ---------- */
+  .galerie{background:var(--ivoire);}
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    grid-auto-rows:110px;
+    gap:14px;
+  }
+  .gallery-item{
+    position:relative;
+    grid-column:span 2;
+    grid-row:span 2;
+    border-radius:4px;
+    overflow:hidden;
+    background:var(--ivoire-warm);
+    border:1px solid rgba(90,56,38,0.15);
+  }
+  .gallery-item:nth-child(1){grid-column:span 3; grid-row:span 3;}
+  .gallery-item:nth-child(2){grid-column:span 3; grid-row:span 2;}
+  .gallery-item:nth-child(3){grid-column:span 3; grid-row:span 2;}
+  .gallery-item:nth-child(4){grid-column:span 2; grid-row:span 2;}
+  .gallery-item:nth-child(5){grid-column:span 2; grid-row:span 2;}
+  .gallery-item:nth-child(6){grid-column:span 2; grid-row:span 2;}
+  @media (max-width:820px){
+    .gallery-grid{grid-template-columns:repeat(2,1fr); grid-auto-rows:150px;}
+    .gallery-item, .gallery-item:nth-child(n){grid-column:span 1; grid-row:span 2;}
+  }
+  .gallery-item img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .gallery-item.empty{
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    padding:14px;
+    background:
+      repeating-linear-gradient(135deg, rgba(193,97,29,0.09) 0 2px, transparent 2px 22px),
+      var(--ivoire-warm);
+  }
+  .gallery-item.empty .placeholder{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--cafe);
+    letter-spacing:0.02em;
+  }
+  .gallery-item.empty .placeholder .fname{
+    display:block; margin-top:6px; color:var(--rouge); font-size:10.5px;
+  }
+  .gallery-item.empty svg{margin:0 auto 8px; opacity:0.5;}
+
+  /* ---------- FAIRE-PART ---------- */
+  .fairepart{background:var(--ivoire-warm);}
+  .fp-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start;}
+  @media (max-width:900px){ .fp-grid{grid-template-columns:1fr;} }
+
+  .field{margin-bottom:18px;}
+  .field label{
+    display:block; font-family:var(--font-mono); font-size:11.5px;
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--cafe);
+    margin-bottom:7px;
+  }
+  .field input, .field textarea{
+    width:100%;
+    padding:12px 14px;
+    background:var(--ivoire);
+    border:1px solid rgba(90,56,38,0.25);
+    border-radius:3px;
+    font-family:var(--font-body);
+    font-size:14.5px;
+    color:var(--cafe-fonce);
+  }
+  .field input:focus, .field textarea:focus{border-color:var(--orange);}
+  .field textarea{resize:vertical; min-height:80px;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:480px){ .field-row{grid-template-columns:1fr;} }
+
+  #pdf-status{margin-top:14px; font-size:13px; color:var(--cafe); min-height:18px;}
+  #pdf-status.error{color:var(--rouge);}
+  #pdf-status.ok{color:#3d6b3d;}
+
+  /* -- carte preview -- */
+  .card-stage{
+    position:sticky; top:110px;
+    display:flex; justify-content:center;
+  }
+  .invite-card{
+    width:100%; max-width:360px;
+    background:var(--ivoire);
+    border:1px solid rgba(90,56,38,0.2);
+    border-radius:4px;
+    padding:38px 30px 32px;
+    position:relative;
+    box-shadow:0 24px 50px -20px rgba(42,24,16,0.35);
+  }
+  .invite-card::before{
+    content:"";
+    position:absolute; inset:10px;
+    border:1px solid rgba(193,97,29,0.35);
+    pointer-events:none;
+    border-radius:2px;
+  }
+  .invite-seal{
+    width:52px; height:52px; border-radius:50%;
+    background:var(--rouge);
+    margin:0 auto 20px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--ivoire); font-family:var(--font-mono); font-size:14px; letter-spacing:0.05em;
+    box-shadow:0 0 0 4px var(--ivoire), 0 0 0 5px rgba(193,97,29,0.4);
+  }
+  .invite-card .eyebrow{text-align:center; display:block; margin-bottom:14px;}
+  .invite-names{
+    font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:30px; text-align:center; line-height:1.2; color:var(--cafe-fonce);
+  }
+  .invite-names .amp{color:var(--orange); font-size:0.75em;}
+  .invite-date{
+    text-align:center; font-family:var(--font-mono); font-size:12.5px;
+    letter-spacing:0.15em; color:var(--rouge); margin-top:14px;
+  }
+  .invite-place{text-align:center; font-size:13px; color:var(--cafe); margin-top:6px;}
+  .invite-divider{
+    width:40px; height:1px; background:var(--orange);
+    margin:22px auto;
+  }
+  .invite-msg{
+    text-align:center; font-size:13.5px; color:var(--cafe-fonce);
+    font-style:italic; line-height:1.65;
+  }
+  .invite-guest{
+    text-align:center; margin-top:22px; font-size:12px;
+    font-family:var(--font-mono); color:var(--cafe); letter-spacing:0.04em;
+  }
+
+  /* ---------- RSVP ---------- */
+  .rsvp-box{
+    max-width:560px;
+    border:1px solid rgba(90,56,38,0.2);
+    border-radius:6px;
+    padding:40px;
+    background:var(--ivoire);
+  }
+  @media (max-width:560px){ .rsvp-box{padding:26px;} }
+  .radio-group{display:flex; gap:22px; margin-top:6px;}
+  .radio-opt{display:flex; align-items:center; gap:8px; font-size:14px;}
+  #rsvp-status{margin-top:16px; font-size:13.5px;}
+  #rsvp-status.ok{color:#3d6b3d;}
+  #rsvp-tally{
+    margin-top:36px; padding-top:24px; border-top:1px solid rgba(90,56,38,0.15);
+    font-size:13px; color:var(--cafe); font-family:var(--font-mono);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    background:var(--cafe-fonce); color:rgba(241,230,213,0.6);
+    padding:50px 0 34px; text-align:center;
+  }
+  footer .brand{justify-content:center; color:var(--ivoire); margin-bottom:16px;}
+  footer p{font-size:12.5px;}
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <nav class="wrap">
+    <div class="brand"><span class="seal">A&M</span> Aïcha & Malick</div>
+    <div class="navlinks">
+      <a href="#accueil">Accueil</a>
+      <a href="#histoire">Notre histoire</a>
+      <a href="#programme">Programme</a>
+      <a href="#galerie">Galerie</a>
+      <a href="#fairepart">Faire-part</a>
+      <a href="#rsvp">RSVP</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="accueil">
+  <svg class="hero-pattern" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <pattern id="dots" width="34" height="34" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="1.6" fill="#E07A2E"/>
+      </pattern>
+    </defs>
+    <rect width="400" height="400" fill="url(#dots)"/>
+  </svg>
+  <div class="hero-inner">
+    <span class="eyebrow on-dark">Save the date</span>
+    <h1>Aïcha<span class="amp">&amp;</span>Malick</h1>
+    <div class="date-line">12 · 09 · 2026 — LOMÉ, TOGO</div>
+    <p class="tagline">Ceci est un modèle de site de mariage. Remplacez les noms, la date et le lieu par les vôtres, puis générez votre faire-part personnalisé plus bas.</p>
+  </div>
+  <div class="scroll-cue"></div>
+</section>
+
+<!-- ================= HISTOIRE ================= -->
+<section id="histoire">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Notre histoire</span>
+      <h2>Trois étapes, une seule promesse</h2>
+      <p>Chaque mariage a son fil rouge. Voici le nôtre — à remplacer par votre propre histoire.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-num">01</div>
+        <h3>La rencontre</h3>
+        <p>Décrivez ici où et comment vous vous êtes rencontrés — le lieu, l'année, le petit détail qui rend l'histoire vôtre.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-num">02</div>
+        <h3>La demande</h3>
+        <p>Le moment où tout a basculé. Une phrase suffit pour planter le décor de ce souvenir.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-num">03</div>
+        <h3>Le grand jour</h3>
+        <p>Et aujourd'hui, nous vous invitons à célébrer avec nous ce nouveau chapitre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROGRAMME ================= -->
+<section class="programme" id="programme">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow on-dark">Programme du jour</span>
+      <h2>Le déroulé</h2>
+      <p>Adaptez les horaires et les lieux à votre propre journée.</p>
+    </div>
+    <div class="ticket">
+      <div class="ticket-row">
+        <div class="ticket-time">14:00</div>
+        <div class="ticket-label">Cérémonie</div>
+        <div class="ticket-place">Temple Saint-Joseph</div>
+      </div>
+      <div class="ticket-row">
+        <div class="ticket-time">16:00</div>
+        <div class="ticket-label">Cocktail</div>
+        <div class="ticket-place">Jardins de la Villa Rosa</div>
+      </div>
+      <div class="ticket-row">
+        <div class="ticket-time">19:00</div>
+        <div class="ticket-label">Dîner</div>
+        <div class="ticket-place">Salle des Palmiers</div>
+      </div>
+      <div class="ticket-row">
+        <div class="ticket-time">22:00</div>
+        <div class="ticket-label">Soirée dansante</div>
+        <div class="ticket-place">Salle des Palmiers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LIEU ================= -->
+<section id="lieu">
+  <div class="wrap">
+    <div class="lieu-grid">
+      <div class="map-plate"><div class="pin"></div></div>
+      <div class="lieu-details">
+        <span class="eyebrow">Le lieu</span>
+        <h3 style="margin-top:14px;">Salle des Palmiers</h3>
+        <address>12 avenue des Baobabs, Lomé, Togo</address>
+        <a class="btn" href="#" onclick="return false;">Voir l'itinéraire</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALERIE ================= -->
+<section class="galerie" id="galerie">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Galerie</span>
+      <h2>Quelques images de nous</h2>
+      <p>Remplacez ces emplacements par vos propres photos : déposez vos fichiers dans un dossier <code>photos/</code> à côté de ce fichier HTML, nommés comme indiqué sur chaque case, ou modifiez directement le chemin <code>src</code> dans le code.</p>
+    </div>
+    <div class="gallery-grid" id="gallery-grid">
+      <div class="gallery-item"><img src="photos/photo-1.jpg" alt="Aïcha et Malick — photo 1" onerror="this.style.display='none'; this.parentElement.classList.add('empty')"><div class="placeholder"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5A3826" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-4.5-4.5L9 19"/></svg>Photo à ajouter<span class="fname">photos/photo-1.jpg</span></div></div>
+      <div class="gallery-item"><img src="photos/photo-2.jpg" alt="Aïcha et Malick — photo 2" onerror="this.style.display='none'; this.parentElement.classList.add('empty')"><div class="placeholder"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5A3826" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-4.5-4.5L9 19"/></svg>Photo à ajouter<span class="fname">photos/photo-2.jpg</span></div></div>
+      <div class="gallery-item"><img src="photos/photo-3.jpg" alt="Aïcha et Malick — photo 3" onerror="this.style.display='none'; this.parentElement.classList.add('empty')"><div class="placeholder"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5A3826" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-4.5-4.5L9 19"/></svg>Photo à ajouter<span class="fname">photos/photo-3.jpg</span></div></div>
+      <div class="gallery-item"><img src="photos/photo-4.jpg" alt="Aïcha et Malick — photo 4" onerror="this.style.display='none'; this.parentElement.classList.add('empty')"><div class="placeholder"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5A3826" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-4.5-4.5L9 19"/></svg>Photo à ajouter<span class="fname">photos/photo-4.jpg</span></div></div>
+      <div class="gallery-item"><img src="photos/photo-5.jpg" alt="Aïcha et Malick — photo 5" onerror="this.style.display='none'; this.parentElement.classList.add('empty')"><div class="placeholder"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5A3826" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-4.5-4.5L9 19"/></svg>Photo à ajouter<span class="fname">photos/photo-5.jpg</span></div></div>
+      <div class="gallery-item"><img src="photos/photo-6.jpg" alt="Aïcha et Malick — photo 6" onerror="this.style.display='none'; this.parentElement.classList.add('empty')"><div class="placeholder"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5A3826" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-4.5-4.5L9 19"/></svg>Photo à ajouter<span class="fname">photos/photo-6.jpg</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAIRE-PART ================= -->
+<section class="fairepart" id="fairepart">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Faire-part personnalisé</span>
+      <h2>Créez votre carte d'invitation</h2>
+      <p>Remplissez les champs ci-dessous : l'aperçu se met à jour en direct. Téléchargez ensuite votre faire-part au format PDF, prêt à imprimer ou à envoyer.</p>
+    </div>
+
+    <div class="fp-grid">
+      <div>
+        <div class="field-row">
+          <div class="field">
+            <label for="fp-name1">Prénom du/de la marié·e 1</label>
+            <input id="fp-name1" type="text" value="Aïcha" maxlength="30">
+          </div>
+          <div class="field">
+            <label for="fp-name2">Prénom du/de la marié·e 2</label>
+            <input id="fp-name2" type="text" value="Malick" maxlength="30">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="fp-date">Date</label>
+            <input id="fp-date" type="text" value="Samedi 12 septembre 2026" maxlength="40">
+          </div>
+          <div class="field">
+            <label for="fp-heure">Heure</label>
+            <input id="fp-heure" type="text" value="14h00" maxlength="20">
+          </div>
+        </div>
+        <div class="field">
+          <label for="fp-lieu">Lieu</label>
+          <input id="fp-lieu" type="text" value="Salle des Palmiers, Lomé" maxlength="60">
+        </div>
+        <div class="field">
+          <label for="fp-message">Message personnalisé</label>
+          <textarea id="fp-message" maxlength="220">Entourés de notre famille et de nos amis, nous unissons nos vies. Votre présence illuminera ce jour.</textarea>
+        </div>
+        <div class="field">
+          <label for="fp-invite">Nom de l'invité (optionnel)</label>
+          <input id="fp-invite" type="text" placeholder="Ex : Famille Koffi" maxlength="40">
+        </div>
+
+        <button class="btn" id="download-btn" style="margin-top:8px;">Télécharger le faire-part en PDF</button>
+        <div id="pdf-status"></div>
+      </div>
+
+      <div class="card-stage">
+        <div class="invite-card" id="preview-card">
+          <span class="eyebrow" id="p-eyebrow">Nous nous marions</span>
+          <div class="invite-seal" id="p-seal">A&amp;M</div>
+          <div class="invite-names" id="p-names">Aïcha<span class="amp">&amp;</span>Malick</div>
+          <div class="invite-date" id="p-date">SAMEDI 12 SEPTEMBRE 2026 · 14H00</div>
+          <div class="invite-place" id="p-lieu">Salle des Palmiers, Lomé</div>
+          <div class="invite-divider"></div>
+          <div class="invite-msg" id="p-message">Entourés de notre famille et de nos amis, nous unissons nos vies. Votre présence illuminera ce jour.</div>
+          <div class="invite-guest" id="p-guest"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RSVP ================= -->
+<section id="rsvp">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">RSVP</span>
+      <h2>Confirmez votre présence</h2>
+      <p>Un mot pour nous dire si vous serez des nôtres.</p>
+    </div>
+
+    <div class="rsvp-box">
+      <div class="field">
+        <label for="r-name">Votre nom</label>
+        <input id="r-name" type="text" placeholder="Prénom et nom">
+      </div>
+      <div class="field">
+        <label>Serez-vous présent·e ?</label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="present" value="oui" checked> Oui, avec joie</label>
+          <label class="radio-opt"><input type="radio" name="present" value="non"> Je ne pourrai pas</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="r-guests">Nombre de personnes</label>
+        <input id="r-guests" type="text" value="1">
+      </div>
+      <div class="field">
+        <label for="r-msg">Un mot pour les mariés (optionnel)</label>
+        <textarea id="r-msg" maxlength="200"></textarea>
+      </div>
+      <button class="btn" id="rsvp-btn">Envoyer ma réponse</button>
+      <div id="rsvp-status"></div>
+      <div id="rsvp-tally"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><span class="seal">A&M</span> Aïcha & Malick</div>
+    <p>Site créé avec soin pour votre grand jour — modifiable à l'infini.</p>
+  </div>
+</footer>
+
+<script>
+  // ---- header solid on scroll ----
+  const header = document.getElementById('site-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('solid', window.scrollY > 60);
+  });
+
+  // ---- live invitation preview ----
+  const el = id => document.getElementById(id);
+  const inputs = ['fp-name1','fp-name2','fp-date','fp-heure','fp-lieu','fp-message','fp-invite'];
+
+  function updatePreview(){
+    const n1 = el('fp-name1').value.trim() || 'Prénom 1';
+    const n2 = el('fp-name2').value.trim() || 'Prénom 2';
+    const date = el('fp-date').value.trim();
+    const heure = el('fp-heure').value.trim();
+    const lieu = el('fp-lieu').value.trim();
+    const msg = el('fp-message').value.trim();
+    const invite = el('fp-invite').value.trim();
+
+    el('p-names').innerHTML = `${n1}<span class="amp">&amp;</span>${n2}`;
+    el('p-seal').textContent = (n1[0]||'?').toUpperCase() + '&' + (n2[0]||'?').toUpperCase();
+    el('p-date').textContent = [date, heure].filter(Boolean).join(' · ').toUpperCase();
+    el('p-lieu').textContent = lieu;
+    el('p-message').textContent = msg;
+    el('p-guest').textContent = invite ? `Cher·e ${invite}` : '';
+  }
+  inputs.forEach(id => el(id).addEventListener('input', updatePreview));
+  updatePreview();
+
+  // ---- PDF generation ----
+  el('download-btn').addEventListener('click', () => {
+    const status = el('pdf-status');
+    status.className = '';
+    status.textContent = 'Génération du PDF…';
+
+    try {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'mm', format: [140, 190] });
+
+      const W = 140, H = 190;
+      const cafeF = [42,24,16], cafe=[90,56,38], orange=[193,97,29], orangeV=[224,122,46], rouge=[138,31,43], ivoire=[251,246,239];
+
+      const n1 = el('fp-name1').value.trim() || 'Prénom 1';
+      const n2 = el('fp-name2').value.trim() || 'Prénom 2';
+      const date = el('fp-date').value.trim();
+      const heure = el('fp-heure').value.trim();
+      const lieu = el('fp-lieu').value.trim();
+      const msg = el('fp-message').value.trim();
+      const invite = el('fp-invite').value.trim();
+
+      // background
+      doc.setFillColor(...ivoire);
+      doc.rect(0, 0, W, H, 'F');
+
+      // decorative dotted corner motif (wax-print inspired), low opacity
+      doc.saveGraphicsState();
+      doc.setGState(new doc.GState({ opacity: 0.14 }));
+      doc.setFillColor(...orange);
+      for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < 6; j++) {
+          if ((i + j) % 2 === 0) doc.circle(W - 8 - i * 5, H - 8 - j * 5, 0.7, 'F');
+        }
+      }
+      doc.restoreGraphicsState();
+
+      // outer + inner frame
+      doc.setDrawColor(...cafe);
+      doc.setLineWidth(0.4);
+      doc.rect(5, 5, W - 10, H - 10);
+      doc.setDrawColor(...orange);
+      doc.setLineWidth(0.25);
+      doc.rect(9, 9, W - 18, H - 18);
+
+      // wax seal
+      const sealX = W / 2, sealY = 28;
+      doc.setFillColor(...rouge);
+      doc.circle(sealX, sealY, 8, 'F');
+      doc.setFillColor(...ivoire);
+      doc.setFont('times', 'bold');
+      doc.setFontSize(11);
+      doc.text(`${(n1[0]||'').toUpperCase()}&${(n2[0]||'').toUpperCase()}`, sealX, sealY + 1.6, { align: 'center' });
+
+      // eyebrow
+      doc.setTextColor(...orange);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setCharSpace(1.4);
+      doc.text('NOUS NOUS MARIONS', W / 2, 46, { align: 'center' });
+      doc.setCharSpace(0);
+
+      // names
+      doc.setTextColor(...cafeF);
+      doc.setFont('times', 'italic');
+      doc.setFontSize(27);
+      doc.text(n1, W / 2, 63, { align: 'center' });
+      doc.setTextColor(...orangeV);
+      doc.setFontSize(20);
+      doc.text('&', W / 2, 72, { align: 'center' });
+      doc.setTextColor(...cafeF);
+      doc.setFontSize(27);
+      doc.text(n2, W / 2, 82, { align: 'center' });
+
+      // date / heure
+      doc.setTextColor(...rouge);
+      doc.setFont('courier', 'normal');
+      doc.setFontSize(9.5);
+      doc.setCharSpace(0.8);
+      doc.text([date, heure].filter(Boolean).join('  ·  ').toUpperCase(), W / 2, 94, { align: 'center' });
+      doc.setCharSpace(0);
+
+      // lieu
+      doc.setTextColor(...cafe);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.text(lieu, W / 2, 102, { align: 'center' });
+
+      // divider
+      doc.setDrawColor(...orange);
+      doc.setLineWidth(0.5);
+      doc.line(W / 2 - 12, 112, W / 2 + 12, 112);
+
+      // message
+      doc.setTextColor(...cafeF);
+      doc.setFont('times', 'italic');
+      doc.setFontSize(11);
+      const msgLines = doc.splitTextToSize(msg || ' ', W - 36);
+      doc.text(msgLines, W / 2, 124, { align: 'center' });
+
+      // guest name
+      if (invite) {
+        doc.setFont('courier', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(...cafe);
+        doc.text(`Cher·e ${invite}`, W / 2, H - 20, { align: 'center' });
+      }
+
+      const safe = (s) => (s || 'faire-part').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+      doc.save(`faire-part-${safe(n1)}-${safe(n2)}.pdf`);
+
+      status.className = 'ok';
+      status.textContent = 'Faire-part téléchargé avec succès.';
+    } catch (err) {
+      console.error(err);
+      status.className = 'error';
+      status.textContent = "Une erreur est survenue lors de la génération du PDF.";
+    }
+  });
+
+  // ---- RSVP (stored locally in this session via window.storage if available) ----
+  const rsvpBtn = el('rsvp-btn');
+  const rsvpStatus = el('rsvp-status');
+  const rsvpTally = el('rsvp-tally');
+
+  async function refreshTally(){
+    try{
+      if(!window.storage) return;
+      const listRes = await window.storage.list('rsvp:', true);
+      const keys = (listRes && listRes.keys) || [];
+      let yes = 0, no = 0, guests = 0;
+      for(const k of keys){
+        try{
+          const r = await window.storage.get(k, true);
+          if(!r) continue;
+          const data = JSON.parse(r.value);
+          if(data.present === 'oui'){ yes++; guests += Number(data.guests)||1; }
+          else no++;
+        }catch(e){}
+      }
+      rsvpTally.textContent = keys.length ? `${yes} confirmation(s) — ${guests} personne(s) attendue(s) — ${no} absence(s)` : '';
+    }catch(e){ /* storage unavailable, ignore silently */ }
+  }
+  refreshTally();
+
+  rsvpBtn.addEventListener('click', async () => {
+    const name = el('r-name').value.trim();
+    if(!name){
+      rsvpStatus.className = '';
+      rsvpStatus.textContent = 'Merci d\'indiquer votre nom.';
+      return;
+    }
+    const present = document.querySelector('input[name="present"]:checked').value;
+    const guests = el('r-guests').value.trim() || '1';
+    const message = el('r-msg').value.trim();
+
+    rsvpStatus.className = '';
+    rsvpStatus.textContent = 'Envoi en cours…';
+
+    const RSVP_EMAIL = 'dekopiall@gmail.com';
+
+    try{
+      // 1) Enregistrement pour le compteur affiché sur la page
+      if(window.storage){
+        const key = 'rsvp:' + name.toLowerCase().replace(/\s+/g,'-') + '-' + Date.now();
+        await window.storage.set(key, JSON.stringify({ name, present, guests, message, ts: Date.now() }), true);
+      }
+
+      // 2) Envoi de la réponse par e-mail via FormSubmit (service tiers gratuit,
+      //    aucun backend requis). La toute première réponse envoyée déclenche un
+      //    e-mail de confirmation à dekopiall@gmail.com : il faut cliquer une fois
+      //    sur le lien d'activation pour que les envois suivants arrivent automatiquement.
+      let emailSent = false;
+      try{
+        const resp = await fetch(`https://formsubmit.co/ajax/${RSVP_EMAIL}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            _subject: `RSVP mariage — ${name} (${present === 'oui' ? 'présent' : 'absent'})`,
+            Nom: name,
+            Présence: present === 'oui' ? 'Oui, avec joie' : 'Ne pourra pas venir',
+            'Nombre de personnes': guests,
+            Message: message || '(aucun message)'
+          })
+        });
+        emailSent = resp.ok;
+      }catch(mailErr){
+        console.error('Envoi e-mail échoué :', mailErr);
+      }
+
+      rsvpStatus.className = 'ok';
+      rsvpStatus.textContent = present === 'oui'
+        ? 'Merci ! Votre présence est confirmée avec joie.'
+        : 'Merci de nous avoir prévenus, vous nous manquerez.';
+      if(!emailSent){
+        rsvpStatus.textContent += ' (Réponse enregistrée sur la page ; l\'envoi par e-mail sera actif après la première activation du formulaire.)';
+      }
+      el('r-name').value = '';
+      el('r-msg').value = '';
+      refreshTally();
+    }catch(err){
+      console.error(err);
+      rsvpStatus.className = 'error';
+      rsvpStatus.textContent = "Votre réponse n'a pas pu être enregistrée. Réessayez.";
+    }
+  });
+</script>
+</body>
+</html>
