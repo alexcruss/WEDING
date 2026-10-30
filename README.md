@@ -16,4 +16,4 @@ Site statique en HTML, CSS et JavaScript, avec génération de PDF côté naviga
 
 ## Réalisation
 
-[Pierre Kossi DEGBOEVI](https://alexcruss.github.io/portfolio/)
+[Pierre Kossi DEGBOEVI](https://pierredegboevi.com/)
